@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "build-browser":
-      "rollup ./out/ArtTree.js --output.format iife --output.file ./out_test/ArtTree.js",
+      "rollup ./out/index.js --output.format iife --output.file ./out_test/ArtTree.js --name 'artTree'",
     "dev": "tsc -w",
     "test": "jest ./test",
     "test-watch": "jest --watch ./test"

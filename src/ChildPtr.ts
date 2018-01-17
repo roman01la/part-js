@@ -6,7 +6,7 @@ export abstract class ChildPtr {
   change(n: PartNode): void {
     n.refcount++
     const node = this.get()
-    if (node !== null) {
+    if (node !== null && node !== undefined) {
       node.decrementRefcount()
     }
     this.set(n)

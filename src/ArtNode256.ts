@@ -32,7 +32,7 @@ export class ArtNode256 extends ArtNode {
         if (other.keys[i] !== 0) {
           this.children[i] = other.children[PartNode.toUint(other.keys[i]) - 1]
           const child = this.children[i]
-          if (child !== null) {
+          if (child !== null && child !== undefined) {
             child.refcount++
           }
         }
@@ -43,7 +43,7 @@ export class ArtNode256 extends ArtNode {
       for (let i = 0; i < 256; i++) {
         this.children[i] = other.children[i]
         const child = this.children[i]
-        if (child !== null) {
+        if (child !== null && child !== undefined) {
           child.refcount++
         }
       }
@@ -126,7 +126,7 @@ export class ArtNode256 extends ArtNode {
       let freed = 0
       for (let i = 0; i < 256; i++) {
         const child = this.children[i]
-        if (child !== null) {
+        if (child !== null && child !== undefined) {
           freed += child.decrementRefcount()
         }
       }

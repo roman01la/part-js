@@ -1,6 +1,6 @@
-const { ArtTree } = require("../out/index")
+const ArtTree = artTree.ArtTree
 
-const maxN = 10000
+const maxN = 100
 const maxKeyLen = 10
 
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
@@ -18,30 +18,34 @@ const genKeys = () => {
   return Array.from(seq).map(s => s.split(/,/g).map(s => +s))
 }
 
-test("create, destroy", () => {
-  const t = new ArtTree()
-  expect(t.size).toBe(0)
-  t.destroy()
-  expect(t.size).toBe(0)
-})
+const test = (name, fn) => {
+  console.log(name)
+  fn()
+}
 
 test("insert, search", () => {
   const t = new ArtTree()
   const keys = genKeys()
   const holdOut = 10
 
+  const start = performance.now()
+
   for (let i = 0; i < keys.length - holdOut; i++) {
     const k = keys[i]
-    expect(t.search(k)).toBe(null)
+    console.assert(t.search(k) === null)
     t.insert(k, i)
-    expect(t.search(k)).toBe(i)
+    console.assert(t.search(k) === i)
   }
 
-  expect(t.size).toBe(keys.length - holdOut)
+  console.assert(t.size === keys.length - holdOut)
 
   for (let i = keys.length - holdOut; i < keys.length; i++) {
-    expect(t.search(keys[i])).toBe(null)
+    console.assert(t.search(keys[i]) === null)
   }
+
+  console.log(`${performance.now() - start} ms`)
+  console.log(`${t.size} nodes`)
+  console.log("==========================")
 })
 
 test("insert, delete", () => {
@@ -50,19 +54,19 @@ test("insert, delete", () => {
 
   for (let i = 0; i < keys.length; i++) {
     const k = keys[i]
-    expect(t.search(k)).toBe(null)
+    console.assert(t.search(k) === null)
     t.insert(k, i)
-    expect(t.search(k)).toBe(i)
+    console.assert(t.search(k) === i)
   }
 
-  expect(t.size).toBe(keys.length)
+  console.assert(t.size === keys.length)
 
   for (let i = 0; i < keys.length; i++) {
     const k = keys[i]
-    expect(t.search(k)).toBe(i)
+    console.assert(t.search(k) === i)
     t.delete(k)
-    expect(t.search(k)).toBe(null)
+    console.assert(t.search(k) === null)
   }
 
-  expect(t.size).toBe(0)
+  console.assert(t.size === 0, t.size, 0)
 })

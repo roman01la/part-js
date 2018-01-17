@@ -39,7 +39,7 @@ export abstract class PartNode {
     depth: number,
     forceClone: boolean,
   ): boolean {
-    if (n === null) {
+    if (n === null || n === undefined) {
       ref.change(new Leaf(key, value))
       return true
     } else {

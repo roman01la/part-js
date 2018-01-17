@@ -9,7 +9,7 @@ import { arrayCopy } from "./utils"
 export class ArtNode4 extends ArtNode {
   public static count: number
 
-  keys: number[] = new Array(4)
+  keys: number[] = new Array(4).fill(0)
   children: (PartNode | null)[] = new Array(4)
 
   constructor(other?: ArtNode4 | ArtNode16) {
@@ -21,7 +21,7 @@ export class ArtNode4 extends ArtNode {
       for (let i = 0; i < other.numChildren; i++) {
         this.children[i] = other.children[i]
         const child = this.children[i]
-        if (child !== null) {
+        if (child !== null && child !== undefined) {
           child.refcount++
         }
       }
@@ -47,7 +47,7 @@ export class ArtNode4 extends ArtNode {
       for (let i = 0; i < this.numChildren; i++) {
         this.children[i] = other.children[i]
         const child = this.children[i]
-        if (child !== null) {
+        if (child !== null && child !== undefined) {
           child.refcount++
         }
       }
@@ -208,7 +208,9 @@ export class ArtNode4 extends ArtNode {
       let freed = 0
       for (let i = 0; i < this.numChildren; i++) {
         const child = this.children[i]
-        if (child !== null) [(freed += child.decrementRefcount())]
+        if (child !== null && child !== undefined) {
+          freed += child.decrementRefcount()
+        }
       }
       ArtNode4.count--
       return freed + 128

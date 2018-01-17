@@ -43,7 +43,7 @@ export class ArtTree extends ChildPtr {
     let prefixLen
     let depth = 0
 
-    while (n !== null) {
+    while (n !== null && n !== undefined) {
       if (n instanceof Leaf) {
         const l = <Leaf>n
         if (l.matches(key)) {

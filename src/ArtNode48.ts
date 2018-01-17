@@ -10,7 +10,7 @@ import { arrayCopy } from "./utils"
 export class ArtNode48 extends ArtNode {
   public static count: number
 
-  keys: number[] = new Array(256)
+  keys: number[] = new Array(256).fill(0)
   children: (PartNode | null)[] = new Array(48)
 
   constructor(other?: ArtNode16 | ArtNode48 | ArtNode256) {
@@ -35,7 +35,7 @@ export class ArtNode48 extends ArtNode {
         this.children[i] = other.children[i]
 
         const child = this.children[i]
-        if (child !== null) {
+        if (child !== null && child !== undefined) {
           child.refcount++
         }
       }
@@ -46,7 +46,7 @@ export class ArtNode48 extends ArtNode {
       for (let i = 0; i < 48; i++) {
         this.children[i] = other.children[i]
         const child = this.children[i]
-        if (child !== null) {
+        if (child !== null && child !== undefined) {
           child.refcount++
         }
       }
@@ -70,11 +70,11 @@ export class ArtNode48 extends ArtNode {
       let pos = 0
       for (let i = 0; i < 256; i++) {
         const child = other.children[i]
-        if (child !== null) {
+        if (child !== null && child !== undefined) {
           this.keys[i] = pos + 1
           this.children[pos] = other.children[i]
           const child = this.children[pos]
-          if (child !== null) {
+          if (child !== null && child !== undefined) {
             child.refcount++
           }
           pos++
@@ -113,7 +113,7 @@ export class ArtNode48 extends ArtNode {
     if (this.numChildren < 48) {
       let pos = 0
 
-      while (this.children[pos] !== null) {
+      while (this.children[pos] !== null && this.children[pos] !== undefined) {
         pos++
       }
 
@@ -172,7 +172,7 @@ export class ArtNode48 extends ArtNode {
       let freed = 0
       for (let i = 0; i < this.numChildren; i++) {
         const child = this.children[i]
-        if (child !== null) {
+        if (child !== null && child !== undefined) {
           freed += child.decrementRefcount()
         }
       }

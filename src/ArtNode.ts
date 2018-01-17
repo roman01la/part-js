@@ -7,7 +7,7 @@ import { arrayCopy } from "./utils"
 export abstract class ArtNode extends PartNode {
   numChildren: number = 0
   partialLen: number = 0
-  partial: number[] = new Array(PartNode.MAX_PREFIX_LEN)
+  partial: number[] = new Array(PartNode.MAX_PREFIX_LEN).fill(0)
 
   constructor(other?: ArtNode) {
     super(other)

@@ -1,3 +1,3 @@
 interface IterCallback {
-  apply(key: string, value: object): void
+  apply(key: number[], value: object): void
 }

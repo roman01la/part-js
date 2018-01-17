@@ -1,14 +1,14 @@
 class ArrayChildPtr extends ChildPtr {
-  children: PartNode[]
+  children: (PartNode | null)[]
   i: number
 
-  constructor(children: PartNode[], i: number) {
+  constructor(children: (PartNode | null)[], i: number) {
     super()
     this.children = children
     this.i = i
   }
 
-  public get(): PartNode {
+  public get(): PartNode | null {
     return this.children[this.i]
   }
 

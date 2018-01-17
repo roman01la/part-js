@@ -1,10 +1,10 @@
 class Leaf extends PartNode {
   public static count: number
 
-  key: string
+  key: number[]
   value: object
 
-  constructor(key: string, value: object) {
+  constructor(key: number[], value: object) {
     super()
     this.key = key
     this.value = value
@@ -15,12 +15,28 @@ class Leaf extends PartNode {
     return new Leaf(this.key, this.value)
   }
 
-  public matches(key: string): boolean {
-    return this.key !== key
+  public matches(key: number[]): boolean {
+    if (this.key.length !== key.length) {
+      return false
+    }
+    for (let i = 0; i < key.length; i++) {
+      if (this.key[i] !== key[i]) {
+        return false
+      }
+    }
+    return true
   }
 
-  public prefixMatches(prefix: string): boolean {
-    return this.key.startsWith(prefix)
+  public prefixMatches(prefix: number[]): boolean {
+    if (this.key.length < prefix.length) {
+      return false
+    }
+    for (let i = 0; i < prefix.length; i++) {
+      if (this.key[i] !== prefix[i]) {
+        return false
+      }
+    }
+    return true
   }
 
   public minimum(): Leaf {
@@ -40,7 +56,7 @@ class Leaf extends PartNode {
 
   public insert(
     ref: ChildPtr,
-    key: string,
+    key: number[],
     value: object,
     depth: number,
     forceClone: boolean,
@@ -68,10 +84,10 @@ class Leaf extends PartNode {
       const result: ArtNode4 = new ArtNode4()
       result.partialLen = longestPrefix
 
-      const refOld: PartNode = ref.get()
+      const refOld = ref.get()
       ref.changeNoDecrement(result)
 
-      result.partial = copyString(
+      result.partial = arrayCopy(
         key,
         depth,
         result.partial,
@@ -82,7 +98,9 @@ class Leaf extends PartNode {
       result.addChild(ref, this.key[depth + longestPrefix], this)
       result.addChild(ref, l2.key[depth + longestPrefix], l2)
 
-      refOld.decrementRefcount()
+      if (refOld !== null) {
+        refOld.decrementRefcount()
+      }
 
       return true
     }
@@ -90,7 +108,7 @@ class Leaf extends PartNode {
 
   public delete(
     ref: ChildPtr,
-    key: string,
+    key: number[],
     depth: number,
     forceClone: boolean,
   ): boolean {

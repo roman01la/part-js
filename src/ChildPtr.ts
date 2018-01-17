@@ -1,5 +1,5 @@
 abstract class ChildPtr {
-  abstract get(): PartNode
+  abstract get(): PartNode | null
   abstract set(n: PartNode): void
   change(n: PartNode): void {
     n.refcount++

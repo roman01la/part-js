@@ -1,8 +1,8 @@
 class ArtNode4 extends ArtNode {
   public static count: number
 
-  keys: string[] = new Array(4)
-  children: PartNode[] = []
+  keys: number[] = new Array(4)
+  children: (PartNode | null)[] = new Array(4)
 
   constructor(other?: ArtNode4 | ArtNode16) {
     super(other)
@@ -12,7 +12,10 @@ class ArtNode4 extends ArtNode {
 
       for (let i = 0; i < other.numChildren; i++) {
         this.children[i] = other.children[i]
-        this.children[i].refcount++
+        const child = this.children[i]
+        if (child !== null) {
+          child.refcount++
+        }
       }
       ArtNode4.count++
     }
@@ -23,7 +26,7 @@ class ArtNode4 extends ArtNode {
       this.numChildren = other.numChildren
       this.partialLen = other.partialLen
 
-      this.partial = copyString(
+      this.partial = arrayCopy(
         other.partial,
         0,
         this.partial,
@@ -35,7 +38,10 @@ class ArtNode4 extends ArtNode {
 
       for (let i = 0; i < this.numChildren; i++) {
         this.children[i] = other.children[i]
-        this.children[i].refcount++
+        const child = this.children[i]
+        if (child !== null) {
+          child.refcount++
+        }
       }
     }
   }
@@ -44,7 +50,7 @@ class ArtNode4 extends ArtNode {
     return new ArtNode4(this)
   }
 
-  public findChild(c: string): ChildPtr | null {
+  public findChild(c: number): ChildPtr | null {
     for (let i = 0; i < this.numChildren; i++) {
       if (this.keys[i] === c) {
         return new ArrayChildPtr(this.children, i)
@@ -53,11 +59,11 @@ class ArtNode4 extends ArtNode {
     return null
   }
 
-  public minimum(): Leaf {
+  public minimum(): Leaf | null {
     return PartNode.minimum(this.children[0])
   }
 
-  public addChild(ref: ChildPtr, c: string, child: PartNode): void {
+  public addChild(ref: ChildPtr, c: number, child: PartNode): void {
     if (this.numChildren < 4) {
       let idx: number
       for (idx = 0; idx < this.numChildren; idx++) {
@@ -93,7 +99,7 @@ class ArtNode4 extends ArtNode {
     }
   }
 
-  public removeChild(ref: ChildPtr, c: string): void {
+  public removeChild(ref: ChildPtr, c: number): void {
     let idx: number
     for (idx = 0; idx < this.numChildren; idx++) {
       if (c === this.keys[idx]) {
@@ -104,7 +110,10 @@ class ArtNode4 extends ArtNode {
       return
     }
 
-    this.children[idx].decrementRefcount()
+    const node = this.children[idx]
+    if (node !== null) {
+      node.decrementRefcount()
+    }
 
     this.keys = arrayCopy(
       this.keys,
@@ -128,7 +137,7 @@ class ArtNode4 extends ArtNode {
       let child = this.children[0]
 
       if (child instanceof Leaf === false) {
-        if (child.refcount > 1) {
+        if (child !== null && child.refcount > 1) {
           child = child.clone()
         }
 
@@ -168,7 +177,9 @@ class ArtNode4 extends ArtNode {
         anChild.partialLen += this.partialLen + 1
       }
 
-      ref.change(child)
+      if (child !== null) {
+        ref.change(child)
+      }
     }
   }
 
@@ -180,7 +191,7 @@ class ArtNode4 extends ArtNode {
     return i
   }
 
-  public childAt(i: number): PartNode {
+  public childAt(i: number): PartNode | null {
     return this.children[i]
   }
 
@@ -188,7 +199,8 @@ class ArtNode4 extends ArtNode {
     if (--this.refcount <= 0) {
       let freed = 0
       for (let i = 0; i < this.numChildren; i++) {
-        freed += this.children[i].decrementRefcount()
+        const child = this.children[i]
+        if (child !== null) [(freed += child.decrementRefcount())]
       }
       ArtNode4.count--
       return freed + 128

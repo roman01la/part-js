@@ -16,14 +16,14 @@ abstract class PartNode {
     }
   }
 
-  public abstract minimum(): Leaf
-  public static minimum(n: PartNode): Leaf {
-    return n.minimum()
+  public abstract minimum(): Leaf | null
+  public static minimum(n: PartNode | null): Leaf | null {
+    return n !== null ? n.minimum() : null
   }
 
   public abstract insert(
     ref: ChildPtr,
-    key: string,
+    key: number[],
     value: object,
     depth: number,
     forceClone: boolean,
@@ -31,7 +31,7 @@ abstract class PartNode {
   public static insert(
     n: PartNode | null,
     ref: ChildPtr,
-    key: string,
+    key: number[],
     value: object,
     depth: number,
     forceClone: boolean,
@@ -46,7 +46,7 @@ abstract class PartNode {
 
   public abstract delete(
     ref: ChildPtr,
-    key: string,
+    key: number[],
     depth: number,
     forceClone: boolean,
   ): boolean

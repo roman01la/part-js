@@ -1,7 +1,7 @@
 abstract class ArtNode extends PartNode {
   numChildren: number = 0
   partialLen: number = 0
-  partial: string = "" // PartNode.MAX_PREFIX_LEN
+  partial: number[] = new Array(PartNode.MAX_PREFIX_LEN)
 
   constructor(other?: ArtNode) {
     super(other)
@@ -9,7 +9,7 @@ abstract class ArtNode extends PartNode {
     if (other) {
       this.numChildren = other.numChildren
       this.partialLen = other.partialLen
-      this.partial = copyString(
+      this.partial = arrayCopy(
         other.partial,
         0,
         this.partial,
@@ -19,7 +19,7 @@ abstract class ArtNode extends PartNode {
     }
   }
 
-  public checkPrefix(key: string, depth: number): number {
+  public checkPrefix(key: number[], depth: number): number {
     const maxCmp = Math.min(
       Math.min(this.partialLen, PartNode.MAX_PREFIX_LEN),
       key.length - depth,
@@ -36,7 +36,7 @@ abstract class ArtNode extends PartNode {
     return idx
   }
 
-  public prefixMismatch(key: string, depth: number): number {
+  public prefixMismatch(key: number[], depth: number): number {
     let maxCmp = Math.min(
       Math.min(this.partialLen, PartNode.MAX_PREFIX_LEN),
       key.length - depth,
@@ -51,12 +51,14 @@ abstract class ArtNode extends PartNode {
     }
 
     if (this.partialLen > PartNode.MAX_PREFIX_LEN) {
-      const l: Leaf = this.minimum()
-      maxCmp = Math.min(l.key.length, key.length) - depth
+      const l = this.minimum()
+      if (l !== null) {
+        maxCmp = Math.min(l.key.length, key.length) - depth
 
-      for (; idx < maxCmp; idx++) {
-        if (l.key[idx + depth] !== key[depth + idx]) {
-          return idx
+        for (; idx < maxCmp; idx++) {
+          if (l.key[idx + depth] !== key[depth + idx]) {
+            return idx
+          }
         }
       }
     }
@@ -64,19 +66,19 @@ abstract class ArtNode extends PartNode {
     return idx
   }
 
-  public abstract findChild(c: string): ChildPtr | null
+  public abstract findChild(c: number): ChildPtr | null
 
-  public abstract addChild(ref: ChildPtr, c: string, child: PartNode): void
+  public abstract addChild(ref: ChildPtr, c: number, child: PartNode): void
 
-  public abstract removeChild(ref: ChildPtr, c: string): void
+  public abstract removeChild(ref: ChildPtr, c: number): void
 
   public abstract nextChildAtOrAfter(i: number): number
 
-  public abstract childAt(i: number): PartNode
+  public abstract childAt(i: number): PartNode | null
 
   public insert(
     ref: ChildPtr,
-    key: string,
+    key: number[],
     value: object,
     depth: number,
     forceClone: boolean,
@@ -95,7 +97,7 @@ abstract class ArtNode extends PartNode {
         ref.changeNoDecrement(result)
         result.partialLen = prefixDiff
 
-        result.partial = copyString(
+        result.partial = arrayCopy(
           this.partial,
           0,
           result.partial,
@@ -109,7 +111,7 @@ abstract class ArtNode extends PartNode {
           result.addChild(ref, thisWritable.partial[prefixDiff], thisWritable)
           thisWritable.partialLen -= prefixDiff + 1
 
-          thisWritable.partial = copyString(
+          thisWritable.partial = arrayCopy(
             thisWritable.partial,
             prefixDiff + 1,
             thisWritable.partial,
@@ -119,23 +121,27 @@ abstract class ArtNode extends PartNode {
         } else {
           thisWritable.partialLen -= prefixDiff + 1
 
-          const l: Leaf = this.minimum()
+          const l = this.minimum()
 
-          result.addChild(ref, l.key[depth + prefixDiff], thisWritable)
+          if (l !== null) {
+            result.addChild(ref, l.key[depth + prefixDiff], thisWritable)
 
-          thisWritable.partial = copyString(
-            l.key,
-            depth + prefixDiff + 1,
-            thisWritable.partial,
-            0,
-            Math.min(PartNode.MAX_PREFIX_LEN, thisWritable.partialLen),
-          )
+            thisWritable.partial = arrayCopy(
+              l.key,
+              depth + prefixDiff + 1,
+              thisWritable.partial,
+              0,
+              Math.min(PartNode.MAX_PREFIX_LEN, thisWritable.partialLen),
+            )
+          }
         }
 
         const l = new Leaf(key, value)
         result.addChild(ref, key[depth + prefixDiff], l)
 
-        oldRef.decrementRefcount()
+        if (oldRef !== null) {
+          oldRef.decrementRefcount()
+        }
 
         return true
       }
@@ -167,7 +173,7 @@ abstract class ArtNode extends PartNode {
 
   public delete(
     ref: ChildPtr,
-    key: string,
+    key: number[],
     depth: number,
     forceClone: boolean,
   ): boolean {
@@ -193,8 +199,10 @@ abstract class ArtNode extends PartNode {
       ref.change(thisWritable)
     }
 
-    const childIsLeaf = child.get() instanceof Leaf
-    const doDelete = child.get().delete(child, key, depth + 1, doClone)
+    const node = child.get()
+    const childIsLeaf = node instanceof Leaf
+    const doDelete =
+      node !== null ? node.delete(child, key, depth + 1, doClone) : false
 
     if (doDelete && childIsLeaf) {
       thisWritable.removeChild(ref, key[depth])

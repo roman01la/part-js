@@ -1,0 +1,24 @@
+{
+  "name": "part-js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "out/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/roman01la/part-js.git"
+  },
+  "keywords": ["PART", "ART", "radix tree", "adaptive radix tree"],
+  "author": "Roman Liutikov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/roman01la/part-js/issues"
+  },
+  "homepage": "https://github.com/roman01la/part-js#readme",
+  "devDependencies": {
+    "typescript": "^2.6.2"
+  }
+}

@@ -5,7 +5,11 @@
   "main": "out/index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "tsc -w"
+    "build-browser":
+      "rollup ./out/ArtTree.js --output.format iife --output.file ./out_test/ArtTree.js",
+    "dev": "tsc -w",
+    "test": "jest ./test",
+    "test-watch": "jest --watch ./test"
   },
   "repository": {
     "type": "git",
@@ -19,6 +23,8 @@
   },
   "homepage": "https://github.com/roman01la/part-js#readme",
   "devDependencies": {
+    "jest": "^22.1.2",
+    "rollup": "^0.54.1",
     "typescript": "^2.6.2"
   }
 }

@@ -137,11 +137,11 @@ export class ArtTree extends ChildPtr {
     return new ArtIterator(null)
   }
 
-  public size(): number {
+  public get size(): number {
     return this.numElements
   }
 
-  public destory(): number {
+  public destroy(): number {
     if (this.root !== null) {
       const result = this.root.decrementRefcount()
       this.root = null

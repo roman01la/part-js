@@ -1,4 +1,7 @@
-class ArrayChildPtr extends ChildPtr {
+import { ChildPtr } from "./ChildPtr"
+import { PartNode } from "./PartNode"
+
+export class ArrayChildPtr extends ChildPtr {
   children: (PartNode | null)[]
   i: number
 

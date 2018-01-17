@@ -1,4 +1,13 @@
-class ArtNode16 extends ArtNode {
+import { Leaf } from "./Leaf"
+import { ArtNode } from "./ArtNode"
+import { ArtNode4 } from "./ArtNode4"
+import { ArtNode48 } from "./ArtNode48"
+import { PartNode } from "./PartNode"
+import { ChildPtr } from "./ChildPtr"
+import { ArrayChildPtr } from "./ArrayChildPtr"
+import { arrayCopy } from "./utils"
+
+export class ArtNode16 extends ArtNode {
   public static count: number
 
   keys: number[] = new Array(16)

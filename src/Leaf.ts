@@ -1,4 +1,9 @@
-class Leaf extends PartNode {
+import { ChildPtr } from "./ChildPtr"
+import { PartNode } from "./PartNode"
+import { ArtNode4 } from "./ArtNode4"
+import { arrayCopy } from "./utils"
+
+export class Leaf extends PartNode {
   public static count: number
 
   key: number[]

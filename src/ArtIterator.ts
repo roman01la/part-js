@@ -1,4 +1,9 @@
-class ArtIterator implements Iterator<[number[], object]> {
+import { PartNode } from "./PartNode"
+import { Deque } from "./Deque"
+import { Leaf } from "./Leaf"
+import { ArtNode } from "./ArtNode"
+
+export class ArtIterator implements Iterator<[number[], object]> {
   private elemStack: Deque<PartNode> = new Deque()
   private idxStack: Deque<number> = new Deque()
 
@@ -16,10 +21,15 @@ class ArtIterator implements Iterator<[number[], object]> {
 
   public next(value?: any): IteratorResult<[number[], object]> {
     if (this.hasNext()) {
-      const { key, value } = <Leaf>this.elemStack.peek()
-      this.idxStack.push(this.idxStack.pop() + 1)
-      this.maybeAdvance()
-      return { value: [key, value], done: false }
+      const leaf = <Leaf | null>this.elemStack.peek()
+      if (leaf !== null) {
+        const { key, value } = leaf
+        this.idxStack.push(this.idxStack.pop() + 1)
+        this.maybeAdvance()
+        return { value: [key, value], done: false }
+      } else {
+        return { value: [[0], {}], done: false }
+      }
     } else {
       return { value: value, done: true }
     }

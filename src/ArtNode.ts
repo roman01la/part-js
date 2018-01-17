@@ -1,4 +1,10 @@
-abstract class ArtNode extends PartNode {
+import { PartNode } from "./PartNode"
+import { ArtNode4 } from "./ArtNode4"
+import { Leaf } from "./Leaf"
+import { ChildPtr } from "./ChildPtr"
+import { arrayCopy } from "./utils"
+
+export abstract class ArtNode extends PartNode {
   numChildren: number = 0
   partialLen: number = 0
   partial: number[] = new Array(PartNode.MAX_PREFIX_LEN)

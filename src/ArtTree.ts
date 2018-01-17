@@ -1,4 +1,10 @@
-class ArtTree extends ChildPtr {
+import { ChildPtr } from "./ChildPtr"
+import { PartNode } from "./PartNode"
+import { Leaf } from "./Leaf"
+import { ArtNode } from "./ArtNode"
+import { ArtIterator } from "./ArtIterator"
+
+export class ArtTree extends ChildPtr {
   root: PartNode | null = null
   numElements = 0
 

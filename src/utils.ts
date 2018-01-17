@@ -1,4 +1,4 @@
-const arrayCopy = <T>(
+export const arrayCopy = <T>(
   src: Array<T>,
   srcPos: number,
   dest: Array<T>,

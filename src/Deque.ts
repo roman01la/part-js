@@ -1,4 +1,4 @@
-class Deque<T> {
+export class Deque<T> {
   private coll: T[] = []
   push(value: T): void {
     this.coll.push(value)

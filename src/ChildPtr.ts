@@ -1,4 +1,6 @@
-abstract class ChildPtr {
+import { PartNode } from "./PartNode"
+
+export abstract class ChildPtr {
   abstract get(): PartNode | null
   abstract set(n: PartNode): void
   change(n: PartNode): void {

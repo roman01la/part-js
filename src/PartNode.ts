@@ -1,4 +1,7 @@
-abstract class PartNode {
+import { ChildPtr } from "./ChildPtr"
+import { Leaf } from "./Leaf"
+
+export abstract class PartNode {
   refcount: number
 
   static MAX_PREFIX_LEN: number = 8

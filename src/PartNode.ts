@@ -53,7 +53,7 @@ abstract class PartNode {
 
   public abstract decrementRefcount(): number
 
-  public abstract exhausted(i: number): boolean
+  public abstract exhausted(i: number | null): boolean
   public static exhausted(n: PartNode | null, i: number): boolean {
     if (n === null) {
       return true

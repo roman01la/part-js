@@ -67,22 +67,20 @@ export class ArtNode256 extends ArtNode {
     while (!this.children[idx]) {
       idx++
     }
-    const child = this.children[idx]
-    if (child) {
-      return PartNode.minimum(child)
-    } else {
-      return null
-    }
+    return PartNode.minimum(this.children[idx])
   }
 
   public addChild(ref: ChildPtr, c: number, child: PartNode): void {
-    this.numChildren++
+    console.assert(this.refcount <= 4)
 
+    this.numChildren++
     this.children[c] = child
     child.refcount++
   }
 
   public removeChild(ref: ChildPtr, c: number): void {
+    console.assert(this.refcount <= 1)
+
     const child = this.children[c]
 
     if (child) {

@@ -44,6 +44,9 @@ export class ArtNode16 extends ArtNode {
 
     if (other instanceof ArtNode48) {
       ArtNode16.count++
+
+      console.assert(other.numChildren <= 16)
+
       this.numChildren = other.numChildren
       this.partialLen = other.partialLen
       this.partial = arrayCopy(
@@ -87,6 +90,8 @@ export class ArtNode16 extends ArtNode {
   }
 
   public addChild(ref: ChildPtr, c: number, child: PartNode): void {
+    console.assert(this.refcount <= 1)
+
     if (this.numChildren < 16) {
       let idx: number
       for (idx = 0; idx < this.numChildren; idx++) {

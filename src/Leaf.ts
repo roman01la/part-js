@@ -83,7 +83,11 @@ export class Leaf extends PartNode {
         depth + longestPrefix >= this.key.length ||
         depth + longestPrefix >= key.length
       ) {
-        throw new Error("Keys cannot be prefixes of other keys")
+        throw new Error(
+          `Keys cannot be prefixes of other keys: [${key.join(
+            ", ",
+          )}] in [${this.key.join(", ")}]`,
+        )
       }
 
       const result = new ArtNode4()

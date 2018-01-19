@@ -56,6 +56,8 @@ export class ArtNode48 extends ArtNode {
     if (other instanceof ArtNode256) {
       ArtNode48.count++
 
+      console.assert(other.numChildren <= 48)
+
       this.numChildren = other.numChildren
       this.partialLen = other.partialLen
 
@@ -101,15 +103,12 @@ export class ArtNode48 extends ArtNode {
     while (this.keys[idx] === 0) {
       idx++
     }
-    const child = this.children[this.keys[idx] - 1]
-    if (child) {
-      return PartNode.minimum(child)
-    } else {
-      return null
-    }
+    return PartNode.minimum(this.children[this.keys[idx] - 1])
   }
 
   public addChild(ref: ChildPtr, c: number, child: PartNode): void {
+    console.assert(this.refcount <= 1)
+
     if (this.numChildren < 48) {
       let pos = 0
 

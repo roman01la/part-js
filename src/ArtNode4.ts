@@ -31,6 +31,8 @@ export class ArtNode4 extends ArtNode {
     if (other instanceof ArtNode16) {
       ArtNode4.count++
 
+      console.assert(other.numChildren <= 4)
+
       this.numChildren = other.numChildren
       this.partialLen = other.partialLen
 
@@ -47,6 +49,7 @@ export class ArtNode4 extends ArtNode {
       for (let i = 0; i < this.numChildren; i++) {
         this.children[i] = other.children[i]
         const child = this.children[i]
+        console.assert(child)
         if (child) {
           child.refcount++
         }
@@ -72,6 +75,8 @@ export class ArtNode4 extends ArtNode {
   }
 
   public addChild(ref: ChildPtr, c: number, child: PartNode): void {
+    console.assert(this.refcount <= 1)
+
     if (this.numChildren < 4) {
       let idx: number
       for (idx = 0; idx < this.numChildren; idx++) {
@@ -184,7 +189,6 @@ export class ArtNode4 extends ArtNode {
 
         anChild.partialLen += this.partialLen + 1
       }
-
       if (child) {
         ref.change(child)
       }

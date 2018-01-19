@@ -8,11 +8,7 @@ export abstract class PartNode {
 
   public abstract clone(): PartNode
   public static clone(n: PartNode | null): PartNode | null {
-    if (n) {
-      return n.clone()
-    } else {
-      return null
-    }
+    return n ? n.clone() : null
   }
 
   public abstract minimum(): Leaf | null
@@ -54,10 +50,6 @@ export abstract class PartNode {
 
   public abstract exhausted(i: number | null): boolean
   public static exhausted(n: PartNode | null, i: number): boolean {
-    if (n) {
-      return n.exhausted(i)
-    } else {
-      return true
-    }
+    return n ? n.exhausted(i) : true
   }
 }

@@ -1,10 +1,10 @@
-import { Node, MAX_PREFIX_LEN } from "./Node"
+import { Node, MAX_PREFIX_LEN, insert } from "./Node"
 import { ArtNode4 } from "./ArtNode4"
 import { arrayCopy } from "./utils"
 
 export class ArtNode extends Node {
   constructor(other) {
-    super()
+    super(other)
 
     this.numChildren = 0
     this.partialLen = 0
@@ -132,7 +132,7 @@ export class ArtNode extends Node {
     const child = thisWritable.findChild(key[depth])
 
     if (child) {
-      return Node.insert(child.get(), child, key, value, depth + 1, forceClone)
+      return insert(child.get(), child, key, value, depth + 1, forceClone)
     } else {
       const l = new Leaf(key, value)
       thisWritable.addChild(ref, key[depth], l)

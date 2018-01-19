@@ -5,8 +5,7 @@
   "main": "out/index.js",
   "scripts": {
     "build": "tsc",
-    "build-browser":
-      "rollup ./out/index.js --output.format iife --output.file ./out_test/ArtTree.js --name 'artTree'",
+    "build-browser": "rollup ./out/index.js --output.format iife --output.file ./out_test/ArtTree.js --name 'artTree'",
     "dev": "tsc -w",
     "test": "jest ./test",
     "test-watch": "jest --watch ./test"
@@ -15,7 +14,12 @@
     "type": "git",
     "url": "git+https://github.com/roman01la/part-js.git"
   },
-  "keywords": ["PART", "ART", "radix tree", "adaptive radix tree"],
+  "keywords": [
+    "PART",
+    "ART",
+    "radix tree",
+    "adaptive radix tree"
+  ],
   "author": "Roman Liutikov",
   "license": "MIT",
   "bugs": {
@@ -23,6 +27,7 @@
   },
   "homepage": "https://github.com/roman01la/part-js#readme",
   "devDependencies": {
+    "invariant": "^2.2.2",
     "jest": "^22.1.2",
     "rollup": "^0.54.1",
     "typescript": "^2.6.2"

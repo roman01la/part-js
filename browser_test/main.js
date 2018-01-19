@@ -1,6 +1,6 @@
 const ArtTree = artTree.ArtTree
 
-const maxN = 100
+const maxN = 5000
 const maxKeyLen = 10
 
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
@@ -44,13 +44,15 @@ test("insert, search", () => {
   }
 
   console.log(`${performance.now() - start} ms`)
-  console.log(`${t.size} nodes`)
+  console.log(`${keys.length} nodes`)
   console.log("==========================")
 })
 
 test("insert, delete", () => {
   const t = new ArtTree()
   const keys = genKeys()
+
+  const start = performance.now()
 
   for (let i = 0; i < keys.length; i++) {
     const k = keys[i]
@@ -63,10 +65,14 @@ test("insert, delete", () => {
 
   for (let i = 0; i < keys.length; i++) {
     const k = keys[i]
-    console.assert(t.search(k) === i)
+    // console.assert(t.search(k) === i)
     t.delete(k)
     console.assert(t.search(k) === null)
   }
 
   console.assert(t.size === 0, t.size, 0)
+
+  console.log(`${performance.now() - start} ms`)
+  console.log(`${keys.length} nodes`)
+  console.log("==========================")
 })

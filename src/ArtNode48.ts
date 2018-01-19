@@ -8,10 +8,10 @@ import { ArrayChildPtr } from "./ArrayChildPtr"
 import { arrayCopy } from "./utils"
 
 export class ArtNode48 extends ArtNode {
-  public static count: number
+  public static count = 0
 
   keys: number[] = new Array(256).fill(0)
-  children: (PartNode | null)[] = new Array(48)
+  children: (PartNode | null)[] = new Array(48).fill(null)
 
   constructor(other?: ArtNode16 | ArtNode48 | ArtNode256) {
     super(other)
@@ -31,11 +31,11 @@ export class ArtNode48 extends ArtNode {
       )
 
       for (let i = 0; i < other.numChildren; i++) {
-        this.keys[PartNode.toUint(other.keys[i])] = i + 1
+        this.keys[other.keys[i]] = i + 1
         this.children[i] = other.children[i]
 
         const child = this.children[i]
-        if (child !== null && child !== undefined) {
+        if (child) {
           child.refcount++
         }
       }
@@ -46,7 +46,7 @@ export class ArtNode48 extends ArtNode {
       for (let i = 0; i < 48; i++) {
         this.children[i] = other.children[i]
         const child = this.children[i]
-        if (child !== null && child !== undefined) {
+        if (child) {
           child.refcount++
         }
       }
@@ -70,11 +70,11 @@ export class ArtNode48 extends ArtNode {
       let pos = 0
       for (let i = 0; i < 256; i++) {
         const child = other.children[i]
-        if (child !== null && child !== undefined) {
+        if (child) {
           this.keys[i] = pos + 1
           this.children[pos] = other.children[i]
           const child = this.children[pos]
-          if (child !== null && child !== undefined) {
+          if (child) {
             child.refcount++
           }
           pos++
@@ -88,7 +88,7 @@ export class ArtNode48 extends ArtNode {
   }
 
   public findChild(c: number): ChildPtr | null {
-    let idx = PartNode.toUint(this.keys[PartNode.toUint(c)])
+    let idx = this.keys[c]
 
     if (idx !== 0) {
       return new ArrayChildPtr(this.children, idx - 1)
@@ -101,8 +101,8 @@ export class ArtNode48 extends ArtNode {
     while (this.keys[idx] === 0) {
       idx++
     }
-    const child = this.children[PartNode.toUint(this.keys[idx]) - 1]
-    if (child !== null) {
+    const child = this.children[this.keys[idx] - 1]
+    if (child) {
       return PartNode.minimum(child)
     } else {
       return null
@@ -113,13 +113,13 @@ export class ArtNode48 extends ArtNode {
     if (this.numChildren < 48) {
       let pos = 0
 
-      while (this.children[pos] !== null && this.children[pos] !== undefined) {
+      while (this.children[pos]) {
         pos++
       }
 
       this.children[pos] = child
       child.refcount++
-      this.keys[PartNode.toUint(c)] = pos + 1
+      this.keys[c] = pos + 1
       this.numChildren++
     } else {
       const result = new ArtNode256(this)
@@ -129,10 +129,10 @@ export class ArtNode48 extends ArtNode {
   }
 
   public removeChild(ref: ChildPtr, c: number): void {
-    const pos = PartNode.toUint(this.keys[PartNode.toUint(c)])
-    this.keys[PartNode.toUint(c)] = 0
+    const pos = this.keys[c]
+    this.keys[c] = 0
     const child = this.children[pos - 1]
-    if (child !== null) {
+    if (child) {
       child.decrementRefcount()
     }
     this.children[pos - 1] = null
@@ -164,7 +164,7 @@ export class ArtNode48 extends ArtNode {
   }
 
   public childAt(i: number): PartNode | null {
-    return this.children[PartNode.toUint(this.keys[i]) - 1]
+    return this.children[this.keys[i] - 1]
   }
 
   public decrementRefcount(): number {
@@ -172,7 +172,7 @@ export class ArtNode48 extends ArtNode {
       let freed = 0
       for (let i = 0; i < this.numChildren; i++) {
         const child = this.children[i]
-        if (child !== null && child !== undefined) {
+        if (child) {
           freed += child.decrementRefcount()
         }
       }

@@ -8,7 +8,7 @@ export class ArtIterator implements Iterator<[number[], object]> {
   private idxStack: Deque<number> = new Deque()
 
   constructor(root: PartNode | null) {
-    if (root !== null) {
+    if (root) {
       this.elemStack.push(root)
       this.idxStack.push(0)
       this.maybeAdvance()
@@ -22,7 +22,7 @@ export class ArtIterator implements Iterator<[number[], object]> {
   public next(value?: any): IteratorResult<[number[], object]> {
     if (this.hasNext()) {
       const leaf = <Leaf | null>this.elemStack.peek()
-      if (leaf !== null) {
+      if (leaf) {
         const { key, value } = leaf
         this.idxStack.push(this.idxStack.pop() + 1)
         this.maybeAdvance()
@@ -63,13 +63,13 @@ export class ArtIterator implements Iterator<[number[], object]> {
           break
         } else {
           const curr = <ArtNode | null>this.elemStack.peek()
-          if (curr !== null) {
+          if (curr) {
             this.idxStack.push(curr.nextChildAtOrAfter(this.idxStack.pop()))
           }
           const idx = this.idxStack.peek()
-          if (idx !== null && curr !== null) {
+          if (idx !== null && curr) {
             const child = curr.childAt(idx)
-            if (child !== null) {
+            if (child) {
               this.elemStack.push(child)
               this.idxStack.push(0)
             }

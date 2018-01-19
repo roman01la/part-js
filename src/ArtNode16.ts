@@ -8,10 +8,10 @@ import { ArrayChildPtr } from "./ArrayChildPtr"
 import { arrayCopy } from "./utils"
 
 export class ArtNode16 extends ArtNode {
-  public static count: number
+  public static count = 0
 
   keys: number[] = new Array(16).fill(0)
-  children: (PartNode | null)[] = new Array(16)
+  children: (PartNode | null)[] = new Array(16).fill(null)
 
   constructor(other?: ArtNode4 | ArtNode16 | ArtNode48) {
     super(other)
@@ -21,7 +21,7 @@ export class ArtNode16 extends ArtNode {
       for (let i = 0; i < other.numChildren; i++) {
         this.children[i] = other.children[i]
         const child = this.children[i]
-        if (child !== null && child !== undefined) {
+        if (child) {
           child.refcount++
         }
       }
@@ -36,7 +36,7 @@ export class ArtNode16 extends ArtNode {
       for (let i = 0; i < this.numChildren; i++) {
         this.children[i] = other.children[i]
         const child = this.children[i]
-        if (child !== null && child !== undefined) {
+        if (child) {
           child.refcount++
         }
       }
@@ -55,12 +55,12 @@ export class ArtNode16 extends ArtNode {
       )
       let child = 0
       for (let i = 0; i < 256; i++) {
-        let pos = PartNode.toUint(other.keys[i])
+        let pos = other.keys[i]
         if (pos !== 0) {
           this.keys[child] = i
           this.children[child] = other.children[pos - 1]
           const node = this.children[child]
-          if (node !== null) {
+          if (node) {
             node.refcount++
           }
           child++
@@ -90,7 +90,7 @@ export class ArtNode16 extends ArtNode {
     if (this.numChildren < 16) {
       let idx: number
       for (idx = 0; idx < this.numChildren; idx++) {
-        if (PartNode.toUint(c) < PartNode.toUint(this.keys[idx])) {
+        if (c < this.keys[idx]) {
           break
         }
       }
@@ -134,7 +134,7 @@ export class ArtNode16 extends ArtNode {
     }
 
     const child = this.children[idx]
-    if (child !== null) {
+    if (child) {
       child.decrementRefcount()
     }
 
@@ -179,7 +179,7 @@ export class ArtNode16 extends ArtNode {
       let freed = 0
       for (let i = 0; i < this.numChildren; i++) {
         const child = this.children[i]
-        if (child !== null && child !== undefined) {
+        if (child) {
           freed += child.decrementRefcount()
         }
       }

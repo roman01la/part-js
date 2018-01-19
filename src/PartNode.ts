@@ -2,26 +2,22 @@ import { ChildPtr } from "./ChildPtr"
 import { Leaf } from "./Leaf"
 
 export abstract class PartNode {
-  refcount: number
+  refcount = 0
 
-  static MAX_PREFIX_LEN: number = 8
-
-  constructor(other?: PartNode) {
-    this.refcount = 0
-  }
+  static MAX_PREFIX_LEN = 8
 
   public abstract clone(): PartNode
   public static clone(n: PartNode | null): PartNode | null {
-    if (n === null) {
-      return null
-    } else {
+    if (n) {
       return n.clone()
+    } else {
+      return null
     }
   }
 
   public abstract minimum(): Leaf | null
   public static minimum(n: PartNode | null): Leaf | null {
-    return n !== null ? n.minimum() : null
+    return n ? n.minimum() : null
   }
 
   public abstract insert(
@@ -39,11 +35,11 @@ export abstract class PartNode {
     depth: number,
     forceClone: boolean,
   ): boolean {
-    if (n === null || n === undefined) {
+    if (n) {
+      return n.insert(ref, key, value, depth, forceClone)
+    } else {
       ref.change(new Leaf(key, value))
       return true
-    } else {
-      return n.insert(ref, key, value, depth, forceClone)
     }
   }
 
@@ -58,14 +54,10 @@ export abstract class PartNode {
 
   public abstract exhausted(i: number | null): boolean
   public static exhausted(n: PartNode | null, i: number): boolean {
-    if (n === null) {
-      return true
-    } else {
+    if (n) {
       return n.exhausted(i)
+    } else {
+      return true
     }
-  }
-
-  static toUint(b: number): number {
-    return b & 0xff
   }
 }

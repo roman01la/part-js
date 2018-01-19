@@ -4,7 +4,7 @@ import { ArtNode4 } from "./ArtNode4"
 import { arrayCopy } from "./utils"
 
 export class Leaf extends PartNode {
-  public static count: number
+  public static count = 0
 
   key: number[]
   value: object
@@ -66,7 +66,7 @@ export class Leaf extends PartNode {
     depth: number,
     forceClone: boolean,
   ): boolean {
-    const clone: boolean = forceClone || this.refcount > 1
+    const clone = forceClone || this.refcount > 1
 
     if (this.matches(key)) {
       if (clone) {
@@ -76,8 +76,8 @@ export class Leaf extends PartNode {
       }
       return false
     } else {
-      const l2: Leaf = new Leaf(key, value)
-      const longestPrefix: number = this.longestCommonPrefix(l2, depth)
+      const l2 = new Leaf(key, value)
+      const longestPrefix = this.longestCommonPrefix(l2, depth)
 
       if (
         depth + longestPrefix >= this.key.length ||
@@ -86,7 +86,7 @@ export class Leaf extends PartNode {
         throw new Error("Keys cannot be prefixes of other keys")
       }
 
-      const result: ArtNode4 = new ArtNode4()
+      const result = new ArtNode4()
       result.partialLen = longestPrefix
 
       const refOld = ref.get()
@@ -103,7 +103,7 @@ export class Leaf extends PartNode {
       result.addChild(ref, this.key[depth + longestPrefix], this)
       result.addChild(ref, l2.key[depth + longestPrefix], l2)
 
-      if (refOld !== null) {
+      if (refOld) {
         refOld.decrementRefcount()
       }
 

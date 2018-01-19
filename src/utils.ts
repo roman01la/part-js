@@ -5,9 +5,10 @@ export const arrayCopy = <T>(
   destPos: number,
   len: number,
 ): Array<T> => {
-  return [].concat(
-    Array.from(dest.slice(0, destPos)),
-    Array.from(src.slice(srcPos, srcPos + len)),
-    Array.from(dest.slice(destPos + len, dest.length)),
-  )
+  return dest
+    .slice(0, destPos)
+    .concat(
+      src.slice(srcPos, srcPos + len),
+      dest.slice(destPos + len, dest.length),
+    )
 }

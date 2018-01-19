@@ -19,9 +19,9 @@ export class ArtTree extends ChildPtr {
   public snapshot(): ArtTree {
     const b = new ArtTree()
 
-    if (this.root !== null) {
+    if (this.root) {
       b.root = PartNode.clone(this.root)
-      if (b.root !== null) {
+      if (b.root) {
         b.root.refcount++
       }
     }
@@ -43,7 +43,7 @@ export class ArtTree extends ChildPtr {
     let prefixLen
     let depth = 0
 
-    while (n !== null && n !== undefined) {
+    while (n) {
       if (n instanceof Leaf) {
         const l = <Leaf>n
         if (l.matches(key)) {
@@ -66,7 +66,7 @@ export class ArtTree extends ChildPtr {
         }
 
         const child = an.findChild(key[depth])
-        n = child !== null ? child.get() : null
+        n = child ? child.get() : null
         depth++
       }
     }
@@ -80,7 +80,7 @@ export class ArtTree extends ChildPtr {
   }
 
   public delete(key: number[]): void {
-    if (this.root !== null) {
+    if (this.root) {
       const childIsLeaf = this.root instanceof Leaf
       const doDelete = this.root.delete(this, key, 0, false)
       if (doDelete) {
@@ -101,7 +101,7 @@ export class ArtTree extends ChildPtr {
     let prefixLen
     let depth = 0
 
-    while (n !== null) {
+    while (n) {
       if (n instanceof Leaf) {
         const l = <Leaf>n
 
@@ -113,7 +113,7 @@ export class ArtTree extends ChildPtr {
       } else {
         if (depth === prefix.length) {
           const min = n.minimum()
-          if (min !== null && min.prefixMatches(prefix)) {
+          if (min && min.prefixMatches(prefix)) {
             return new ArtIterator(n)
           } else {
             return new ArtIterator(null)
@@ -142,7 +142,7 @@ export class ArtTree extends ChildPtr {
   }
 
   public destroy(): number {
-    if (this.root !== null) {
+    if (this.root) {
       const result = this.root.decrementRefcount()
       this.root = null
       return result

@@ -5,12 +5,12 @@ import { ChildPtr } from "./ChildPtr"
 import { arrayCopy } from "./utils"
 
 export abstract class ArtNode extends PartNode {
-  numChildren: number = 0
-  partialLen: number = 0
+  numChildren = 0
+  partialLen = 0
   partial: number[] = new Array(PartNode.MAX_PREFIX_LEN).fill(0)
 
   constructor(other?: ArtNode) {
-    super(other)
+    super()
 
     if (other) {
       this.numChildren = other.numChildren
@@ -58,7 +58,7 @@ export abstract class ArtNode extends PartNode {
 
     if (this.partialLen > PartNode.MAX_PREFIX_LEN) {
       const l = this.minimum()
-      if (l !== null) {
+      if (l) {
         maxCmp = Math.min(l.key.length, key.length) - depth
 
         for (; idx < maxCmp; idx++) {
@@ -129,7 +129,7 @@ export abstract class ArtNode extends PartNode {
 
           const l = this.minimum()
 
-          if (l !== null) {
+          if (l) {
             result.addChild(ref, l.key[depth + prefixDiff], thisWritable)
 
             thisWritable.partial = arrayCopy(
@@ -145,7 +145,7 @@ export abstract class ArtNode extends PartNode {
         const l = new Leaf(key, value)
         result.addChild(ref, key[depth + prefixDiff], l)
 
-        if (oldRef !== null) {
+        if (oldRef) {
           oldRef.decrementRefcount()
         }
 
@@ -161,7 +161,7 @@ export abstract class ArtNode extends PartNode {
 
     const child = thisWritable.findChild(key[depth])
 
-    if (child !== null) {
+    if (child) {
       return PartNode.insert(
         child.get(),
         child,
@@ -197,7 +197,7 @@ export abstract class ArtNode extends PartNode {
 
     const child = thisWritable.findChild(key[depth])
 
-    if (child === null) {
+    if (!child) {
       return false
     }
 
@@ -207,8 +207,7 @@ export abstract class ArtNode extends PartNode {
 
     const node = child.get()
     const childIsLeaf = node instanceof Leaf
-    const doDelete =
-      node !== null ? node.delete(child, key, depth + 1, doClone) : false
+    const doDelete = node ? node.delete(child, key, depth + 1, doClone) : false
 
     if (doDelete && childIsLeaf) {
       thisWritable.removeChild(ref, key[depth])
